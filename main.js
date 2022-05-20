@@ -1,23 +1,32 @@
 document.addEventListener('keydown', there_was_a_keydown);
 
 window.onload = function() {
-	generate()
+	generate(4)
 };
 
 function there_was_a_keydown(e) {
 	if (e.keyCode == 32){
-		generate()
+		generate(4)
 	};
 };
 
-function generate() {
+function generate(count) {
 	var basehsl = random_hsl(1.5)
+	var generatedcolours = [];
+
+	for (let i = 0; i < (count - 1); i++) {
+		var randomhsl = random_hsl(1.5)
+		generatedcolours[i] = {h: constrain_hue(basehsl.h + 180 * Math.round(rand(1,2))), s: randomhsl.s, l: randomhsl.l}
+	}
+
 	document.getElementById("col1").style.backgroundColor = 'hsl(' + basehsl.h + ',' + basehsl.s + '%,' + basehsl.l + '%)'
 	var rgb = hsl_to_rgb(basehsl.h,basehsl.s,basehsl.l)
-	document.getElementById("col1").firstElementChild.innerHTML = rgb_to_hex(Math.round(rgb.r), Math.round(rgb.g), Math.round(rgb.b))
-	document.getElementById("col2").style.backgroundColor = 'hsl(' + constrain_hue(basehsl.h + 180 * Math.round(rand(1,2))) + ',' + random_hsl(1.5).s + '%,' + random_hsl(1.5).l + '%)'
-	document.getElementById("col3").style.backgroundColor = 'hsl(' + constrain_hue(basehsl.h + 180 * Math.round(rand(1,2))) + ',' + random_hsl(1.5).s + '%,' + random_hsl(1.5).l + '%)'
-	document.getElementById("col4").style.backgroundColor = 'hsl(' + constrain_hue(basehsl.h + 180 * Math.round(rand(1,2))) + ',' + random_hsl(1.5).s + '%,' + random_hsl(1.5).l + '%)'
+	document.getElementById("col1").firstElementChild.innerHTML = rgb_to_hex(Math.round(rgb.r), Math.round(rgb.g), Math.round(rgb.b)) 
+	document.getElementById("col2").style.backgroundColor = 'hsl(' + generatedcolours[0].h + ',' + generatedcolours[0].s + '%,' + generatedcolours[0].l + '%)'
+	document.getElementById("col3").style.backgroundColor = 'hsl(' + generatedcolours[1].h + ',' + generatedcolours[1].s + '%,' + generatedcolours[1].l + '%)'
+	document.getElementById("col4").style.backgroundColor = 'hsl(' + generatedcolours[2].h + ',' + generatedcolours[2].s + '%,' + generatedcolours[2].l + '%)'
+	//document.getElementById("col3").style.backgroundColor = 'hsl(' + constrain_hue(basehsl.h + 180 * Math.round(rand(1,2))) + ',' + random_hsl(1.5).s + '%,' + random_hsl(1.5).l + '%)'
+	//document.getElementById("col4").style.backgroundColor = 'hsl(' + constrain_hue(basehsl.h + 180 * Math.round(rand(1,2))) + ',' + random_hsl(1.5).s + '%,' + random_hsl(1.5).l + '%)'
 }
 
 //Returns a random value from a given range
@@ -27,7 +36,7 @@ function rand(min, max) {
 
 //Generates a random HSL colour, with option to use 
 function random_hsl(curve) {
-	var h = rand(1, 360);
+	var h = Math.round(rand(1, 360));
 	//var s = rand(0, 100);
 	//var l = rand(0, 100);
 	//Funny curve for values, it works (i think)
